@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Website Projects To-Do List</title>
+  <style>
+    body {
+      font-family: italic;
+      background-color: #f2f2f2;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: rgb(231, 159, 159);
+      box-shadow: 0 2px 4px rgba(35, 18, 18, 0.612);
+      border-radius: 10px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .taskForm {
+      display: flex;
+    }
+    .taskForm input[type="text"] {
+      flex-grow: 1;
+      padding: 10px;
+      margin-right: 10px;
+    }
+    .taskForm select {
+      padding: 10px;
+      margin-right: 10px;
+    }
+    .taskItem {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+    .taskItem input[type="checkbox"] {
+      margin-right: 10px;
+    }
+    .taskItem label {
+      flex-grow: 1;
+    }
+    .taskItem span {
+      margin-right: 10px;
+    }
+    .taskItem .priority-high {
+      color: red;
+      font-weight: bold;
+    }
+    .taskItem .priority-medium {
+      color: yellow;
+      font-weight: bold;
+    }
+    .taskItem .priority-low {
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Website Projects To-Do List</h1>
+    <div class="taskForm">
+      <input id="taskInput" type="text" placeholder="Add a task">
+      <select id="taskPriority">
+        <option value="high">High Priority</option>
+        <option value="medium">Medium Priority</option>
+        <option value="low">Low Priority</option>
+      </select>
+      <input id="taskDeadline" type="date">
+      <input id="taskLabels" type="text" placeholder="Labels (comma-separated)">
+      <button id="addTaskButton">Add Task</button>
+    </div>
+    <div id="taskList"></div>
+  </div>
+
+  <script>
+    const taskInput = document.getElementById("taskInput");
+    const taskPriority = document.getElementById("taskPriority");
+    const taskDeadline = document.getElementById("taskDeadline");
+    const taskLabels = document.getElementById("taskLabels");
+    const addTaskButton = document.getElementById("addTaskButton");
+    const taskList = document.getElementById("taskList");
+
+    addTaskButton.addEventListener("click", addTask);
+    taskInput.addEventListener("keydown", function (event) {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        addTask();
+      }
+    });
+
+    function addTask() {
+      const taskText = taskInput.value.trim();
+      const taskPriorityValue = taskPriority.value;
+      const taskDeadlineValue = taskDeadline.value;
+      const taskLabelsValue = taskLabels.value.trim();
+
+      if (taskText !== "") {
+        const taskItem = document.createElement("div");
+        taskItem.classList.add("taskItem");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.addEventListener("change", function () {
+          taskItem.style.textDecoration = this.checked ? "line-through" : "none";
+        });
+
+        const label = document.createElement("label");
+        label.textContent = taskText;
+
+        const prioritySpan = document.createElement("span");
+        prioritySpan.textContent = "Priority: ";
+        if (taskPriorityValue === "high") {
+          prioritySpan.classList.add("priority-high");
+        } else if (taskPriorityValue === "medium") {
+          prioritySpan.classList.add("priority-medium");
+        } else {
+          prioritySpan.classList.add("priority-low");
+        }
+        prioritySpan.textContent += taskPriorityValue.charAt(0).toUpperCase() + taskPriorityValue.slice(1);
+
+        const deadlineSpan = document.createElement("span");
+        deadlineSpan.textContent = "Deadline: " + taskDeadlineValue;
+
+        const labelsSpan = document.createElement("span");
+        labelsSpan.textContent = "Labels: " + taskLabelsValue;
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.addEventListener("click", function () {
+          taskList.removeChild(taskItem);
+        });
+
+        taskItem.appendChild(checkbox);
+        taskItem.appendChild(label);
+        taskItem.appendChild(prioritySpan);
+        taskItem.appendChild(deadlineSpan);
+        taskItem.appendChild(labelsSpan);
+        taskItem.appendChild(deleteButton);
+
+        taskList.appendChild(taskItem);
+
+        taskInput.value = "";
+        taskPriority.value = "high";
+        taskDeadline.value = "";
+        taskLabels.value = "";
+      }
+    }
+  </script>
+</body>
+</html>
